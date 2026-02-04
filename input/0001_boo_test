@@ -1,7 +1,0 @@
-SELECT 
-    DATE(server_access_time AT TIME ZONE 'Asia/Seoul') AS date_ymd
-    , COUNT(*) AS row_count
-FROM
-    zigzag_mart_log.ad_creatives_partitioned
-WHERE
-    date_ymd = '2025-10-29'
