@@ -25,7 +25,7 @@ jobs:
           pip install sqlglot
 
       - name: Run SQL conversion script
-        run: python convert.py
+        run: python ./convert.py
 
       - name: Commit and Push changes
         uses: stefanzweifel/git-auto-commit-action@v5
