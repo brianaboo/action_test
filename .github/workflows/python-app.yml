@@ -26,10 +26,7 @@ jobs:
 
       - name: Run SQL conversion script
         run: |
-          # 파일 존재 여부 확인 (디버깅용)
-          ls -al 
-          # 명시적 경로로 실행
-          python ./convert.py
+          python converted.py
 
       - name: Commit and Push changes
         uses: stefanzweifel/git-auto-commit-action@v5
