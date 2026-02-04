@@ -3,17 +3,19 @@ name: SQL Conversion Automation
 on:
   push:
     paths:
-      - 'input/**' # input 폴더 내 변경사항이 있을 때만 실행
+      - 'input/**'
 
 jobs:
   convert-sql:
     runs-on: ubuntu-latest
     permissions:
-      contents: write # 파일 커밋 권한 부여
+      contents: write
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -21,15 +23,20 @@ jobs:
           python-version: '3.10'
 
       - name: Install dependencies
-        run: |
-          pip install sqlglot
+        run: pip install sqlglot
 
       - name: Run SQL conversion script
+        run: python converted.py
+
+      - name: Debug - List generated files
         run: |
-          python converted.py
+          echo "Checking output folder structure..."
+          ls -R output/
 
       - name: Commit and Push changes
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
           commit_message: "Auto-converted SQL files [skip ci]"
-          file_pattern: 'output/converted/**' # output 폴더의 변경사항만 커밋
+          # output 폴더 내의 모든 변경사항을 강제로 포함
+          file_pattern: 'output/**'
+          disable_globbing: false
