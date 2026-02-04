@@ -4,4 +4,4 @@ SELECT
 FROM
     zigzag_mart_log.ad_creatives_partitioned
 WHERE
-    date_ymd = '2025-10-29'
+    date_ymd = '2025-10-29';
