@@ -1,7 +1,8 @@
 name: SQL Conversion Automation
 
 on:
-  push:
+  # PR을 생성하거나 PR 브랜치에 추가 push를 할 때 트리거
+  pull_request:
     paths:
       - 'input/**'
 
@@ -9,12 +10,14 @@ jobs:
   convert-sql:
     runs-on: ubuntu-latest
     permissions:
-      contents: write
+      contents: write # 브랜치에 파일을 쓸 수 있는 권한
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
+          # PR을 보낸 브랜치를 체크아웃 (커밋을 다시 하기 위함)
+          ref: ${{ github.head_ref }}
           token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Set up Python
@@ -30,13 +33,13 @@ jobs:
 
       - name: Debug - List generated files
         run: |
-          echo "Checking output folder structure..."
-          ls -R output/
+          ls -R output/ || echo "No output generated"
 
       - name: Commit and Push changes
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
-          commit_message: "Auto-converted SQL files [skip ci]"
-          # output 폴더 내의 모든 변경사항을 강제로 포함
+          commit_message: "docs: auto-converted SQL files for review"
           file_pattern: 'output/**'
-          disable_globbing: false
+          # PR 브랜치로 직접 푸시
+          branch: ${{ github.head_ref }}
+  
